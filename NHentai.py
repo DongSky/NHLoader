@@ -15,7 +15,7 @@ class NHentai(object):
         self.parser = BeautifulSoup(self.index_spider.text, "html.parser")
     def refresh_random(self):
         self.random_spider = requests.get("https://nhentai.net/random/")
-        rand_id = int(self.random_spider.url.split("/")[-2])
+        rand_id = str(self.random_spider.url.split("/")[-2])
         return Book(book_id=rand_id)
     def get_book(self, book_id):
         return Book(book_id)
@@ -25,14 +25,17 @@ class NHentai(object):
         query_spider = requests.get(query_link)
         parser = BeautifulSoup(query_spider.text, "html.parser")
         body = parser.find_all("div", attrs={"class":"gallery"})
+        result = []
         for div in body:
             try:
                 img_link = div.a.img["data-src"]
             except:
                 img_link = div.a.img["src"]
             title = div.a.div.string
-            _id = int(img_link.split("/")[-2])
+            _id = div.a["href"].split("/")[-2]
             print(_id, title)
+            result.append((_id, title))
+        return result
     def print_index(self):
         body = self.parser.find_all("div", attrs={"class":"gallery"})
         for div in body:
@@ -41,7 +44,7 @@ class NHentai(object):
             except:
                 img_link = div.a.img["src"]
             title = div.a.div.string
-            _id = int(img_link.split("/")[-2])
+            _id = div.a["href"].split("/")[-2]
             print(_id, title)
 if __name__ == "__main__":
     nh = NHentai()
