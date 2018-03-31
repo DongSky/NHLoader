@@ -17,7 +17,7 @@ if __name__ == "__main__":
     parser.add_argument("-r",action="store_true",default=False,dest="random")
     flags = parser.parse_args()
 
-    assert ((not flags.search is None) or (not flags.id is None))
+    assert ((not flags.search is None) or (not flags.id is None) or (not flags.random is False))
     nhentai = NHentai()
     if flags.random:
         book = nhentai.refresh_random()
